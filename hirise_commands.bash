@@ -56,7 +56,9 @@ mkdir merge_links
 mkdir merge_links_tmp
 
 bam2len.py -b $BAM1 > raw_lengths.txt
-if [ ! -e raw_chunks ] ; then mkdir raw_chunks ; fi ; nseqs=`wc -l raw_lengths.txt | cut -d' '  -f 1 ` ; cat raw_lengths.txt | awk '{print $1,0,$2, rand()}'  | sort -k4n | awk '{print $1,$2,$3}' | split -d -l `expr $nseqs / 16 + 1` - raw_chunks/bed_chunk.
+if [ ! -e raw_chunks ] ; then mkdir raw_chunks ; fi ; 
+nseqs=`wc -l raw_lengths.txt | cut -d' '  -f 1 ` ; 
+cat raw_lengths.txt | awk '{print $1,0,$2, rand()}'  | sort -k4n | awk '{print $1,$2,$3}' | split -d -l `expr $nseqs / 16 + 1` - raw_chunks/bed_chunk.
 samtools mpileup -q 10 -l raw_chunks/bed_chunk.00 $SHOTGUN_BAM  | cut -f 1,2,4 | 
     depth_histogram.py -o raw_chunks/00.dhist -t raw_chunks/00.depth_thresholds
 if [ ! -e raw_chunks ] ; then mkdir raw_chunks ; fi ; nseqs=`wc -l raw_lengths.txt | cut -d' '  -f 1 ` ; cat raw_lengths.txt | awk '{print $1, rand()}'  | sort -k2n | awk '{print $1}' | split -d -l `expr $nseqs / 16 + 1` - raw_chunks/chunk.
